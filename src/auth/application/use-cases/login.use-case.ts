@@ -1,36 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UsersService } from 'src/users/users.service'; // Cambbiar la importacion
-
+import type { IUserRepository } from 'src/users/domain/user.repository.interface';
 
 @Injectable()
 export class LoginUseCase {
     constructor(
-        private usersService: UsersService,
+        //private usersService: UsersService,
+        @Inject('IUserRepository')
+        private readonly userRepository: IUserRepository,
         private jwtService: JwtService,
-    ) {}
+    ) { }
 
-    async validateUser(username: string, pass: string): Promise<any> {
-         //Agregar logica de users
-        const user = await this.usersService.findOne(username);
-        //ToDo: Comparar contraseña cifrada
-        if (user && user.password === pass) {
-            const {password, ...result} = user;
-            return result;
-        }
+    async validateUser(email: string, pass: string): Promise<any> {
         //Agregar logica de users
-        const userFromDb = await this.usersService.findOneFromDb(username);
-        if (userFromDb && (await bcrypt.compare(pass, userFromDb.password))) {
-            const { password, ...result } = userFromDb;
-            return result;
-        }
+        const user = await this.userRepository.findByEmail(email);
+        if (!user) throw new UnauthorizedException('Credenciales inválidas');
+        //ToDo: Comparar contraseña cifrada
+        const isMatch = await bcrypt.compare(pass, user.password);
+        if (!isMatch) throw new UnauthorizedException('Credenciales inválidas');
+        const { password, ...result } = user;
+        return result;
 
-        return null;
     }
 
     async login(user: any) {
-        const payload = { username: user.username, sub: user.id};
+        const payload = { email: user.email, sub: user.id };
         return {
             access_token: this.jwtService.sign(payload),
         }
