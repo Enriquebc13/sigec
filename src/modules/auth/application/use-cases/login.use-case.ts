@@ -1,7 +1,7 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import type { IUserRepository } from 'src/users/domain/user.repository.interface';
+import type { IUserRepository } from 'src/modules/users/domain/interfaces/user.repository.interface';
 
 @Injectable()
 export class LoginUseCase {

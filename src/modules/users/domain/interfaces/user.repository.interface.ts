@@ -1,5 +1,5 @@
 //Aqui van las acciones que el sistema debe poder hacer con los usuarios
-import { User } from './user.entity';
+import { User } from '../entities/user.entity';
 
 export interface IUserRepository {
   create(user: User): Promise<User>;

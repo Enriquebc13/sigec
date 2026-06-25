@@ -1,5 +1,5 @@
-import { IUserRepository } from '../domain/user.repository.interface';
-import { User } from '../domain/user.entity';
+import { IUserRepository } from '../../domain/interfaces/user.repository.interface';
+import { User } from '../../domain/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
 //Estructura de datos que ocupa el caso de uso

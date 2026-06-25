@@ -9,8 +9,8 @@ import { LocalStrategy } from './infrastructure/strategies/local.strategy';
 import { JwtStrategy } from './infrastructure/strategies/jwt.strategy';
 
 import { LoginUseCase } from './application/use-cases/login.use-case';
-import { UsersModule } from 'src/users/infrastructure/users.module';
-import type { IUserRepository } from 'src/users/domain/user.repository.interface';
+import { UsersModule } from 'src/modules/users/users.module';
+import type { IUserRepository } from 'src/modules/users/domain/interfaces/user.repository.interface';
 
 @Module({
   imports: [

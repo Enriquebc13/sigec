@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
 import { LocalAuthGuard } from "../guards/local-auth.guard";
 import { Public } from "../decorators/public.decorator";
-import { LoginUseCase } from "src/auth/application/use-cases/login.use-case";
+import { LoginUseCase } from "src/modules/auth/application/use-cases/login.use-case";
 
 @Controller('auth')
 export class AuthController {
