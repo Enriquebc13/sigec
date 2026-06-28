@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpStatus, Post, Request, UseGuards } from "@nestjs/common";
 import { LocalAuthGuard } from "../guards/local-auth.guard";
 import { Public } from "../decorators/public.decorator";
 import { LoginUseCase } from "src/modules/auth/application/use-cases/login.use-case";
@@ -9,6 +9,7 @@ export class AuthController {
 
     @Public()
     @UseGuards(LocalAuthGuard)
+    @HttpCode(HttpStatus.OK)
     @Post('login')
     singIn(@Request() req) {
         return this.LoginUseCase.login(req.user);
