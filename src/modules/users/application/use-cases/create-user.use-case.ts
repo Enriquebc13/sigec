@@ -1,7 +1,8 @@
-import { IUserRepository } from '../../domain/interfaces/user.repository.interface';
+import type { IUserRepository } from '../../domain/interfaces/user.repository.interface';
 import { User } from '../../domain/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UserResponseDto } from '../dtos/user-response.dto';
+import { Inject, Injectable } from '@nestjs/common';
 
 //Estructura de datos que ocupa el caso de uso
 export interface ICreateUserInput {
@@ -11,10 +12,14 @@ export interface ICreateUserInput {
     password: string;
     role: 'ADMIN' | 'CLIENT';
 }
+@Injectable()
 
 export class CreateUserUseCase {
-
-    constructor(private readonly userRepository: IUserRepository) { }
+    
+    constructor(
+        @Inject('IUserRepository')
+        private readonly userRepository: IUserRepository
+    ) {}
 
     async execute(input: ICreateUserInput): Promise<UserResponseDto> {
 
