@@ -1,0 +1,22 @@
+import { Module } from '@nestjs/common';
+import { PrismaService } from '../../prisma.service';
+import { PropertyController } from './infrastructure/controllers/property.controller';
+import { PrismaPropertyRepository } from './infrastructure/repositories/prisma-property.repository';
+import { CreatePropertyUseCase } from './application/use-cases/create-property.use-case';
+
+@Module({
+  controllers: [PropertyController],
+  providers: [
+    PrismaService,
+    {
+      provide: 'IPropertyRepository',
+      useClass: PrismaPropertyRepository,
+    },
+    {
+      provide: CreatePropertyUseCase,
+      useFactory: (propertyRepo: PrismaPropertyRepository) => new CreatePropertyUseCase(propertyRepo),
+      inject: ['IPropertyRepository'],
+    },
+  ],
+})
+export class PropertyModule {}
