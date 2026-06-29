@@ -28,11 +28,19 @@ export class PrismaUserRepository implements IUserRepository {
         const user = await this.prisma.user.findUnique({ where: { email } });
         return user ? (user as User) : null;
     }
-
     async findById(id: string): Promise<User | null> {
-        const user = await this.prisma.user.findUnique({ where: { id } });
-        return user ? (user as User) : null;
+        const user = await this.prisma.user.findUnique({
+            where: { id },
+        });
+
+        if (!user) return null;
+
+        return {
+            ...user,
+            updatedAt: user.updatedAt ?? new Date(), 
+        };
     }
+
 
     async findAll(): Promise<User[]> {
         const users = await this.prisma.user.findMany();
