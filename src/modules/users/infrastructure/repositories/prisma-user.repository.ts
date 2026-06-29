@@ -37,13 +37,24 @@ export class PrismaUserRepository implements IUserRepository {
 
         return {
             ...user,
-            updatedAt: user.updatedAt ?? new Date(), 
+            updatedAt: user.updatedAt ?? new Date(),
         };
     }
-
 
     async findAll(): Promise<User[]> {
         const users = await this.prisma.user.findMany();
         return users as User[];
     }
+
+  async update(id: string, data: Partial<User>): Promise<User> {
+    const updatedUser = await this.prisma.user.update({
+        where: { id },
+        data,
+    });
+
+    return {
+        ...updatedUser,
+        updatedAt: updatedUser.updatedAt ?? new Date(),
+    };
+}
 }
