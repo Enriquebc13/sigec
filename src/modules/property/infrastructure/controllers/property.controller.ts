@@ -7,6 +7,8 @@ import { GetPropertyUseCase } from '../../application/use-cases/get-property.use
 import { UpdatePropertyDto } from '../../application/dtos/update-property.dto';
 import { UpdatePropertyUseCase } from '../../application/use-cases/update-property.use-case';
 import { DeletePropertyUseCase } from '../../application/use-cases/delete-property.use-case';
+import { RolesGuard } from 'src/modules/auth/infrastructure/guards/roles.guard';
+import { Roles } from 'src/modules/auth/infrastructure/decorators/roles.decorator';
 
 @Controller('properties')
 export class PropertyController {
@@ -18,7 +20,8 @@ export class PropertyController {
     private readonly deletePropertyUseCase: DeletePropertyUseCase,
   ) { }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Post()
   create(@Body() dto: CreatePropertyDto) {
     return this.createPropertyUseCase.execute(dto);
@@ -36,13 +39,15 @@ export class PropertyController {
     return this.getPropertyUseCase.execute(id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Put(':id')
   update(@Param('id') id: string, @Body() dto: UpdatePropertyDto) {
     return this.updatePropertyUseCase.execute(id, dto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Delete(':id')
   async remove(@Param('id') id: string) {
     await this.deletePropertyUseCase.execute(id);
