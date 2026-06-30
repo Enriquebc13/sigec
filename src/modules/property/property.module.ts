@@ -4,6 +4,7 @@ import { PropertyController } from './infrastructure/controllers/property.contro
 import { PrismaPropertyRepository } from './infrastructure/repositories/prisma-property.repository';
 import { CreatePropertyUseCase } from './application/use-cases/create-property.use-case';
 import { GetAllPropertiesUseCase } from './application/use-cases/get-all-properties.use-case';
+import { GetPropertyUseCase } from './application/use-cases/get-property.use-case';
 
 @Module({
   controllers: [PropertyController],
@@ -21,6 +22,11 @@ import { GetAllPropertiesUseCase } from './application/use-cases/get-all-propert
     {
       provide: GetAllPropertiesUseCase,
       useFactory: (propertyRepo: PrismaPropertyRepository) => new GetAllPropertiesUseCase(propertyRepo),
+      inject: ['IPropertyRepository'],
+    },
+    {
+      provide: GetPropertyUseCase,
+      useFactory: (repo: PrismaPropertyRepository) => new GetPropertyUseCase(repo),
       inject: ['IPropertyRepository'],
     },
   ],
