@@ -6,12 +6,15 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/infrastructure/guards/jwt-auth.guard';
 import { AuthModule } from './modules/auth/auth.module';
+import { RequestModule } from './modules/request/request.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
-    UsersModule,],
+    UsersModule,
+    RequestModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
