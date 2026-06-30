@@ -9,12 +9,6 @@ export class GetAllUsersUseCase {
     private readonly userRepository: IUserRepository) { }
 
     async execute(): Promise<UserResponseDto[]> {
-        const users = await this.userRepository.findAll();
-        return users.map(({ id, name, lastname, email }) => ({
-            id,
-            name,
-            lastname,
-            email,
-        }));
+        return await this.userRepository.findAll();
     }
 }
