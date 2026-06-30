@@ -56,5 +56,12 @@ export class PrismaUserRepository implements IUserRepository {
         ...updatedUser,
         updatedAt: updatedUser.updatedAt ?? new Date(),
     };
+
 }
+
+async delete(id: string): Promise<void> {
+        await this.prisma.user.delete({
+            where: { id },
+        });
+    }
 }
