@@ -6,6 +6,7 @@ import { CreatePropertyUseCase } from './application/use-cases/create-property.u
 import { GetAllPropertiesUseCase } from './application/use-cases/get-all-properties.use-case';
 import { GetPropertyUseCase } from './application/use-cases/get-property.use-case';
 import { UpdatePropertyUseCase } from './application/use-cases/update-property.use-case';
+import { DeletePropertyUseCase } from './application/use-cases/delete-property.use-case';
 
 @Module({
   controllers: [PropertyController],
@@ -33,6 +34,11 @@ import { UpdatePropertyUseCase } from './application/use-cases/update-property.u
     {
       provide: UpdatePropertyUseCase,
       useFactory: (propertyRepo: PrismaPropertyRepository) => new UpdatePropertyUseCase(propertyRepo),
+      inject: ['IPropertyRepository'],
+    },
+    {
+      provide: DeletePropertyUseCase,
+      useFactory: (propertyRepo: PrismaPropertyRepository) => new DeletePropertyUseCase(propertyRepo),
       inject: ['IPropertyRepository'],
     },
   ],
