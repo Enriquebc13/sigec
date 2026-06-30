@@ -9,7 +9,7 @@ export class CreateUserDto {
   @IsString({ message: 'El nombre no es válido.' })
   name: string;
 
-  @IsNotEmpty({ message: 'El  es obligatorio.' })
+  @IsNotEmpty({ message: 'El  apellido es obligatorio.' })
   @IsString ({ message: 'El apellido no es válido.'})
   lastname: string;
 
