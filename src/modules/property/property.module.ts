@@ -5,6 +5,7 @@ import { PrismaPropertyRepository } from './infrastructure/repositories/prisma-p
 import { CreatePropertyUseCase } from './application/use-cases/create-property.use-case';
 import { GetAllPropertiesUseCase } from './application/use-cases/get-all-properties.use-case';
 import { GetPropertyUseCase } from './application/use-cases/get-property.use-case';
+import { UpdatePropertyUseCase } from './application/use-cases/update-property.use-case';
 
 @Module({
   controllers: [PropertyController],
@@ -26,9 +27,14 @@ import { GetPropertyUseCase } from './application/use-cases/get-property.use-cas
     },
     {
       provide: GetPropertyUseCase,
-      useFactory: (repo: PrismaPropertyRepository) => new GetPropertyUseCase(repo),
+      useFactory: (propertyRepo: PrismaPropertyRepository) => new GetPropertyUseCase(propertyRepo),
+      inject: ['IPropertyRepository'],
+    },
+    {
+      provide: UpdatePropertyUseCase,
+      useFactory: (propertyRepo: PrismaPropertyRepository) => new UpdatePropertyUseCase(propertyRepo),
       inject: ['IPropertyRepository'],
     },
   ],
 })
-export class PropertyModule {}
+export class PropertyModule { }
