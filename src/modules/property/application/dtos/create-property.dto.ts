@@ -3,22 +3,23 @@ import { PropertyType } from 'generated/prisma/enums';
 
 
 export class CreatePropertyDto {
-  @IsString()
+  @IsString({ message: 'El título debe ser una cadena de texto.' })
   title: string;
 
-  @IsString()
+  @IsString({ message: 'La descripción debe ser una cadena de texto.' })
   @IsOptional()
   description?: string;
 
-  @IsNumber()
-  @Min(0)
+  @IsNumber({}, { message: 'El precio debe ser un número.' })
+  @Min(0, { message: "El precio debe ser mayor o igual a 0" })
   price: number;
 
-  @IsString()
+  @IsString({ message: 'La dimensión debe ser una cadena de texto.' })
   @IsOptional()
   dimensions?: string;
 
-  @IsEnum(PropertyType)
+  @IsEnum(PropertyType, {
+    message: 'El tipo de propiedad no es válido.',})
   type: PropertyType;
 
   @IsString()
