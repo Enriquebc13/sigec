@@ -23,7 +23,7 @@ export class UpdatePropertyDto {
   @IsOptional()
   type?: PropertyType;
 
-  @IsEnum(PropertyStatus)
+  @IsEnum(PropertyStatus, {message: 'El tipo de status no es válido.',})
   @IsOptional()
   status?: PropertyStatus;
 }
