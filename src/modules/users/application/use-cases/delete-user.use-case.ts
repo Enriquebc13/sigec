@@ -8,13 +8,16 @@ export class DeleteUserUseCase {
         private readonly userRepository: IUserRepository,
     ) {}
 
-    async execute(id: string): Promise<void> {
+    async execute(id: string) {
         const user = await this.userRepository.findById(id);
 
         if (!user) {
-            throw new NotFoundException(`User with id ${id} not found`);
+            throw new NotFoundException(`El ususrio con ID ${id} no fue encontrado.`);
         }
 
         await this.userRepository.delete(id);
+        return{
+            mesaage: 'Usurio eliminado correctamente'
+        }
     }
 }

@@ -49,8 +49,8 @@ export class UserController {
 
     @Roles('ADMIN')
     @Delete(':id')
-    @HttpCode(HttpStatus.NO_CONTENT)
-    async remove(@Param('id') id: string): Promise<void> {
+    @HttpCode(HttpStatus.OK)
+    async remove(@Param('id') id: string) {
         return this.deleteUserUseCase.execute(id);
     }
 
