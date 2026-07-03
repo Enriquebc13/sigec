@@ -1,0 +1,17 @@
+-- CreateTable
+CREATE TABLE `Property` (
+    `id` VARCHAR(191) NOT NULL,
+    `title` VARCHAR(191) NOT NULL,
+    `description` VARCHAR(191) NULL,
+    `price` DECIMAL(10, 2) NOT NULL,
+    `dimensions` VARCHAR(191) NULL,
+    `type` ENUM('LOCAL', 'OFFICE', 'WAREHOUSE') NOT NULL,
+    `status` ENUM('AVAILABLE', 'RESERVED', 'RENTED', 'UNAVAILABLE') NOT NULL DEFAULT 'AVAILABLE',
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `userId` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `Property` ADD CONSTRAINT `Property_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

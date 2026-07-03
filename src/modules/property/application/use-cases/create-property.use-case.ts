@@ -1,0 +1,26 @@
+import { Inject, Injectable } from '@nestjs/common';
+
+import type { IPropertyRepository } from '../../domain/interfaces/property.repository.interface';
+import type { CreatePropertyDto } from '../dtos/create-property.dto';
+import type { Property } from '../../domain/entities/property.entity';
+import { PropertyStatus } from 'generated/prisma/enums';
+
+@Injectable()
+export class CreatePropertyUseCase {
+  constructor(
+    @Inject('IPropertyRepository')
+    private readonly propertyRepository: IPropertyRepository,
+  ) {}
+
+  async execute(dto: CreatePropertyDto): Promise<Property> {
+    return this.propertyRepository.create({
+      title: dto.title,
+      description: dto.description ?? null,
+      price: dto.price,
+      dimensions: dto.dimensions ?? null,
+      type: dto.type,
+      status: PropertyStatus.AVAILABLE,
+      userId: dto.userId,
+    });
+  }
+}
