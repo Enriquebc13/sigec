@@ -6,6 +6,7 @@ import { PrismaUserRepository } from './infrastructure/repositories/prisma-user.
 import { GetAllUsersUseCase } from './application/use-cases/get-all-users.use-case';
 import { GetUserByIdUseCase } from './application/use-cases/find-user-by-id.use-case';
 import { UpdateUserUseCase } from './application/use-cases/update-user.use-case';
+import { DeleteUserUseCase } from './application/use-cases/delete-user.use-case';
 
 
 @Module({
@@ -20,6 +21,7 @@ import { UpdateUserUseCase } from './application/use-cases/update-user.use-case'
           GetAllUsersUseCase,
           GetUserByIdUseCase,
           UpdateUserUseCase,
+          DeleteUserUseCase
     ],
 
     exports: ['IUserRepository'],
