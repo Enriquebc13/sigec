@@ -12,12 +12,12 @@ export class DeleteUserUseCase {
         const user = await this.userRepository.findById(id);
 
         if (!user) {
-            throw new NotFoundException(`El ususrio con ID ${id} no fue encontrado.`);
+            throw new NotFoundException(`El usuario con ID ${id} no fue encontrado.`);
         }
 
         await this.userRepository.delete(id);
         return{
-            mesaage: 'Usurio eliminado correctamente'
+            mesaage: 'Usuario eliminado correctamente'
         }
     }
 }
