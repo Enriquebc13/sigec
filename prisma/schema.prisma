@@ -13,23 +13,69 @@ datasource db {
   provider = "mysql"
 }
 
-enum Role{
+enum Role {
   ADMIN
   CLIENT
 }
 
 model User {
-  id       String @id @default(cuid())
-  name     String
-  lastname String
-  email    String @unique
-  password String
-  role     Role
-  active   Boolean @default(true)
+  id        String    @id @default(cuid())
+  name      String
+  lastname  String
+  email     String    @unique
+  password  String
+  role      Role
+  active    Boolean   @default(true)
   //Campos de timestap
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
+
+  // Un usuario puede registrar muchas propiedades
+  properties Property[]
 }
+
+enum PropertyStatus {
+  AVAILABLE // disponible
+  RESERVED // apartado
+  RENTED // rentado
+  UNAVAILABLE // no disponible temporalmente
+}
+
+enum PropertyType {
+  LOCAL
+  OFFICE
+  WAREHOUSE
+}
+
+model Property {
+  id          String         @id @default(cuid())
+  title       String
+  description String?
+  price       Decimal        @db.Decimal(10, 2)
+  dimensions  String?
+  type        PropertyType
+  status      PropertyStatus @default(AVAILABLE)
+  createdAt   DateTime       @default(now())
+
+  // El administrador que registró el inmueble  
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  // Una propiedad puede tener muchas imágenes
+  //images Image[]
+
+  // Una propiedad puede tener muchas solicitudes
+  //requests    Request[]
+}
+
+// model Image {
+//   id  String @id @default(cuid())
+//   url String
+
+//   // Una imagen pertenece a un inmueble
+//   propertyId String
+//   property   Property @relation(fields: [propertyId], references: [id])
+// }
 
 enum RequestStatus {
   PENDING
