@@ -86,7 +86,10 @@ enum RequestStatus {
 
 model Request {
   id         String        @id @default(cuid())
-  userId     String
+  nombre     String
+  apellidos  String
+  telefono   String
+  correo     String
   propertyId String
   status     RequestStatus @default(PENDING)
   createdAt  DateTime      @default(now())

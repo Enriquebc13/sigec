@@ -3,7 +3,10 @@ import { Request } from '../../domain/entities/request.entity';
 import { RequestResponseDto } from '../dtos/request-response.dto';
 
 export interface ICreateRequestInput {
-  userId: string;
+  nombre: string;
+  apellidos: string;
+  telefono: string;
+  correo: string;
   propertyId: string;
 }
 
@@ -13,7 +16,10 @@ export class CreateRequestUseCase {
   async execute(input: ICreateRequestInput): Promise<RequestResponseDto> {
     const newRequest = new Request(
       crypto.randomUUID(),
-      input.userId,
+      input.nombre,
+      input.apellidos,
+      input.telefono,
+      input.correo,
       input.propertyId,
       'PENDING',
       new Date(),
@@ -23,7 +29,10 @@ export class CreateRequestUseCase {
 
     return {
       id: created.id,
-      userId: created.userId,
+      nombre: created.nombre,
+      apellidos: created.apellidos,
+      telefono: created.telefono,
+      correo: created.correo,
       propertyId: created.propertyId,
       status: created.status,
       createdAt: created.createdAt,

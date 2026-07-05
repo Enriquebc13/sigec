@@ -11,7 +11,10 @@ export class PrismaRequestRepository implements IRequestRepository {
     const created = await this.prisma.request.create({
       data: {
         id: request.id,
-        userId: request.userId,
+        nombre: request.nombre,
+        apellidos: request.apellidos,
+        telefono: request.telefono,
+        correo: request.correo,
         propertyId: request.propertyId,
         status: request.status,
         createdAt: request.createdAt,
@@ -31,7 +34,7 @@ export class PrismaRequestRepository implements IRequestRepository {
   }
 
   async findByUserId(userId: string): Promise<Request[]> {
-    const requests = await this.prisma.request.findMany({ where: { userId } });
+    const requests = await this.prisma.request.findMany({ where: { propertyId: userId } });
     return requests as unknown as Request[];
   }
 }
