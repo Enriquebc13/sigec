@@ -48,14 +48,22 @@ enum PropertyType {
 }
 
 model Property {
-  id          String         @id @default(cuid())
-  title       String
-  description String?
-  price       Decimal        @db.Decimal(10, 2)
-  dimensions  String?
-  type        PropertyType
-  status      PropertyStatus @default(AVAILABLE)
-  createdAt   DateTime       @default(now())
+  id              String         @id @default(cuid())
+  title           String
+  description     String?
+  price           Decimal        @db.Decimal(10, 2)
+  maintenanceCost Decimal?       @db.Decimal(10, 2)
+  dimensions      String?
+  floor           Int?
+  type            PropertyType
+  status          PropertyStatus @default(AVAILABLE)
+  address         String
+  city            String
+  state           String
+  zipCode         String
+  amenities       String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime?      @updatedAt
 
   // El administrador que registró el inmueble  
   userId String
