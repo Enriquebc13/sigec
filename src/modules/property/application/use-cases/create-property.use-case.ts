@@ -10,17 +10,25 @@ export class CreatePropertyUseCase {
   constructor(
     @Inject('IPropertyRepository')
     private readonly propertyRepository: IPropertyRepository,
-  ) {}
+  ) { }
 
   async execute(dto: CreatePropertyDto): Promise<Property> {
     return this.propertyRepository.create({
       title: dto.title,
       description: dto.description ?? null,
       price: dto.price,
+      maintenanceCost: dto.maintenanceCost ?? null,
       dimensions: dto.dimensions ?? null,
+      floor: dto.floor ?? null,
       type: dto.type,
       status: PropertyStatus.AVAILABLE,
+      address: dto.address,
+      city: dto.city,
+      state: dto.state,
+      zipCode: dto.zipCode,
+      amenities: dto.amenities ?? null,
       userId: dto.userId,
+      updatedAt: null,
     });
   }
 }
