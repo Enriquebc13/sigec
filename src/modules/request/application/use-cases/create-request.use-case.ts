@@ -1,6 +1,8 @@
-import { IRequestRepository } from '../../domain/interfaces/request.repository.interface';
+import type{ IRequestRepository } from '../../domain/interfaces/request.repository.interface';
 import { Request } from '../../domain/entities/request.entity';
 import { RequestResponseDto } from '../dtos/request-response.dto';
+import type { IRequestHistoryRepository } from '../../domain/interfaces/request-history.repository.interface';
+import { Inject, Injectable } from '@nestjs/common';
 
 export interface ICreateRequestInput {
   nombre: string;
@@ -9,11 +11,20 @@ export interface ICreateRequestInput {
   correo: string;
   propertyId: string;
 }
-
+@Injectable()
 export class CreateRequestUseCase {
-  constructor(private readonly requestRepository: IRequestRepository) {}
+  constructor(
+    @Inject('IRequestRepository')
+    private readonly requestRepository: IRequestRepository,
 
-  async execute(input: ICreateRequestInput): Promise<RequestResponseDto> {
+    @Inject('IRequestHistoryRepository')
+    private readonly requestHistoryRepository: IRequestHistoryRepository,
+  ) {}
+
+  async execute(
+    input: ICreateRequestInput,
+    userId: string
+  ): Promise<RequestResponseDto> {
     const newRequest = new Request(
       crypto.randomUUID(),
       input.nombre,
@@ -26,6 +37,14 @@ export class CreateRequestUseCase {
     );
 
     const created = await this.requestRepository.create(newRequest);
+    await this.requestHistoryRepository.create({
+
+      id: crypto.randomUUID(),
+      action: 'CREATED',
+      requestId: created.id,
+      userId: userId,
+      changedAt: new Date()
+    });
 
     return {
       id: created.id,

@@ -32,6 +32,9 @@ model User {
 
   // Un usuario puede registrar muchas propiedades
   properties Property[]
+  // Un usuario puede generar muchos registros en el historial
+  requestHistory RequestHistory[]
+  @@map("user")
 }
 
 enum PropertyStatus {
@@ -65,7 +68,8 @@ model Property {
   //images Image[]
 
   // Una propiedad puede tener muchas solicitudes
-  //requests    Request[]
+  requests    Request[]
+  @@map("property")
 }
 
 // model Image {
@@ -93,4 +97,31 @@ model Request {
   propertyId String
   status     RequestStatus @default(PENDING)
   createdAt  DateTime      @default(now())
+
+  history RequestHistory[]
+  property Property @relation(fields: [propertyId], references: [id])
+  @@map("request")
+}
+
+enum RequestAction {
+  CREATED
+  APPROVED
+  REJECTED
+  UPDATED
+  CANCELLED
+}
+
+model RequestHistory {
+  id        String         @id @default(cuid())
+  action    RequestAction
+  changedAt DateTime       @default(now())
+
+// Muchos registros de historial pertenecen a una solicitud
+  requestId String
+  request   Request @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  // Muchos registros de historial pueden pertenecer al mismo usuario
+  userId String
+  user   User @relation(fields: [userId], references: [id])
+  @@map("requesthistory")
 }
