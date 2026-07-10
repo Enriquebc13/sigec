@@ -73,21 +73,23 @@ model Property {
   user   User   @relation(fields: [userId], references: [id])
 
   // Una propiedad puede tener muchas imágenes
-  //images Image[]
+  images Image[]
 
   // Una propiedad puede tener muchas solicitudes
   requests    Request[]
   @@map("property")
 }
 
-// model Image {
-//   id  String @id @default(cuid())
-//   url String
+model Image {
+  id        String    @id @default(cuid())
+  url       String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 
-//   // Una imagen pertenece a un inmueble
-//   propertyId String
-//   property   Property @relation(fields: [propertyId], references: [id])
-// }
+  // Una imagen pertenece a un inmueble
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+}
 
 enum RequestStatus {
   PENDING

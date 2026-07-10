@@ -1,20 +1,24 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  IMAGE_REPOSITORY,
-  IImageRepository,
-} from '../../domain/interfaces/image.repository.interface';
-import { FirebaseService } from '../../../../shared/firebase/firebase.service';
+
+import type { IImageRepository } from '../../domain/interfaces/image.repository.interface';
+import type { Image } from '../../domain/entities/image.entity';
+import { CloudinaryService } from '../../../../shared/cloudinary/cloudinary.service';
 
 @Injectable()
 export class CreateImageUseCase {
   constructor(
-    @Inject(IMAGE_REPOSITORY)
+    @Inject('IImageRepository')
     private readonly imageRepository: IImageRepository,
-    private readonly firebaseService: FirebaseService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  async execute(file: Express.Multer.File, propertyId: number) {
-    const url = await this.firebaseService.uploadFile(file, 'properties');
-    return this.imageRepository.create(url, propertyId);
+  async execute(file: Express.Multer.File, propertyId: string): Promise<Image> {
+    const url = await this.cloudinaryService.uploadFile(file, 'properties');
+
+    return this.imageRepository.create({
+      url,
+      propertyId,
+      updatedAt: null,
+    });
   }
 }

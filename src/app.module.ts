@@ -9,11 +9,13 @@ import { AuthModule } from './modules/auth/auth.module';
 import { RequestModule } from './modules/request/request.module';
 import { PropertyModule } from './modules/property/property.module';
 import { RolesGuard } from './modules/auth/infrastructure/guards/roles.guard';
+import { ImagesModule } from './modules/images/images.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
+    ImagesModule,
     UsersModule,
     RequestModule,
     PropertyModule,

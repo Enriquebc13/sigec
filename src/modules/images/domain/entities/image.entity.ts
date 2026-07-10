@@ -1,4 +1,4 @@
-export class ImageEntity {
+export class Image {
   constructor(
     public readonly id: string,
     public readonly url: string,
