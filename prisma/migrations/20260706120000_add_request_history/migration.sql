@@ -27,8 +27,4 @@ ALTER TABLE `requesthistory` ADD CONSTRAINT `requesthistory_userId_fkey` FOREIGN
 -- RenameIndex
 ALTER TABLE `user` DROP INDEX `User_email_key`, ADD UNIQUE INDEX `user_email_key` (`email`);
 
--- AddForeignKey
-ALTER TABLE `property` ADD CONSTRAINT `property_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
--- RenameIndex
-ALTER TABLE `user` DROP INDEX `User_email_key`, ADD UNIQUE INDEX `user_email_key` (`email`);
