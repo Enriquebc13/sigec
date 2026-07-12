@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider     = "prisma-client"
   output       = "../generated/prisma"
@@ -32,8 +30,11 @@ model User {
 
   // Un usuario puede registrar muchas propiedades
   properties Property[]
+  // Un usuario puede generar muchas solicitudes
+  requests   Request[]
   // Un usuario puede generar muchos registros en el historial
   requestHistory RequestHistory[]
+
   @@map("user")
 }
 
@@ -76,14 +77,14 @@ model Property {
   //images Image[]
 
   // Una propiedad puede tener muchas solicitudes
-  requests    Request[]
+  requests Request[]
+
   @@map("property")
 }
 
 // model Image {
 //   id  String @id @default(cuid())
 //   url String
-
 //   // Una imagen pertenece a un inmueble
 //   propertyId String
 //   property   Property @relation(fields: [propertyId], references: [id])
@@ -93,21 +94,23 @@ enum RequestStatus {
   PENDING
   APPROVED
   REJECTED
-  WAITLIST
 }
 
 model Request {
-  id         String        @id @default(cuid())
-  nombre     String
-  apellidos  String
-  telefono   String
-  correo     String
+  id        String        @id @default(cuid())
+  telefono  String
+  status    RequestStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+
+  // Usuario logueado que hizo la solicitud
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
   propertyId String
-  status     RequestStatus @default(PENDING)
-  createdAt  DateTime      @default(now())
+  property   Property @relation(fields: [propertyId], references: [id])
 
   history RequestHistory[]
-  property Property @relation(fields: [propertyId], references: [id])
+
   @@map("request")
 }
 
@@ -116,20 +119,20 @@ enum RequestAction {
   APPROVED
   REJECTED
   UPDATED
-  CANCELLED
 }
 
 model RequestHistory {
-  id        String         @id @default(cuid())
+  id        String        @id @default(cuid())
   action    RequestAction
-  changedAt DateTime       @default(now())
+  changedAt DateTime      @default(now())
 
-// Muchos registros de historial pertenecen a una solicitud
+  // Muchos registros de historial pertenecen a una solicitud
   requestId String
   request   Request @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
   // Muchos registros de historial pueden pertenecer al mismo usuario
   userId String
   user   User @relation(fields: [userId], references: [id])
+
   @@map("requesthistory")
 }
