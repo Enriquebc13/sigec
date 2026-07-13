@@ -1,5 +1,7 @@
-import { IsString, IsNumber, IsOptional, IsEnum, Min, IsInt } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsEnum, Min, IsInt, ValidateNested } from 'class-validator';
 import { PropertyType, PropertyStatus } from 'generated/prisma/enums';
+import { Type } from 'class-transformer';
+import { UpdateAddressDto } from './update-address.dto';
 
 export class UpdatePropertyDto {
   @IsString({ message: 'El título debe ser una cadena de texto.' })
@@ -36,23 +38,12 @@ export class UpdatePropertyDto {
   @IsOptional()
   status?: PropertyStatus;
 
-  @IsString({ message: 'La dirección debe ser una cadena de texto.' })
-  @IsOptional()
-  address?: string;
-
-  @IsString({ message: 'La ciudad debe ser una cadena de texto.' })
-  @IsOptional()
-  city?: string;
-
-  @IsString({ message: 'El estado debe ser una cadena de texto.' })
-  @IsOptional()
-  state?: string;
-
-  @IsString({ message: 'El código postal debe ser una cadena de texto.' })
-  @IsOptional()
-  zipCode?: string;
-
   @IsString({ message: 'Las amenidades deben ser una cadena de texto.' })
   @IsOptional()
   amenities?: string;
+
+  @ValidateNested()
+  @Type(() => UpdateAddressDto)
+  @IsOptional()
+  address?: UpdateAddressDto;
 }

@@ -31,9 +31,10 @@ model User {
   updatedAt DateTime? @updatedAt
 
   // Un usuario puede registrar muchas propiedades
-  properties Property[]
+  properties     Property[]
   // Un usuario puede generar muchos registros en el historial
   requestHistory RequestHistory[]
+
   @@map("user")
 }
 
@@ -60,10 +61,6 @@ model Property {
   floor           Int?
   type            PropertyType
   status          PropertyStatus @default(AVAILABLE)
-  address         String
-  city            String
-  state           String
-  zipCode         String
   amenities       String?
   createdAt       DateTime       @default(now())
   updatedAt       DateTime?      @updatedAt
@@ -72,12 +69,30 @@ model Property {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
+  // Una propiedad tiene una dirección
+  address Address?
+
   // Una propiedad puede tener muchas imágenes
   //images Image[]
 
   // Una propiedad puede tener muchas solicitudes
-  requests    Request[]
+  requests Request[]
+
   @@map("property")
+}
+
+model Address {
+  id      String @id @default(cuid())
+  street  String
+  city    String
+  state   String
+  zipCode String
+
+  // Una dirección pertenece a una propiedad
+  propertyId String   @unique
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("address")
 }
 
 // model Image {
@@ -106,8 +121,9 @@ model Request {
   status     RequestStatus @default(PENDING)
   createdAt  DateTime      @default(now())
 
-  history RequestHistory[]
-  property Property @relation(fields: [propertyId], references: [id])
+  history  RequestHistory[]
+  property Property         @relation(fields: [propertyId], references: [id])
+
   @@map("request")
 }
 
@@ -120,16 +136,17 @@ enum RequestAction {
 }
 
 model RequestHistory {
-  id        String         @id @default(cuid())
+  id        String        @id @default(cuid())
   action    RequestAction
-  changedAt DateTime       @default(now())
+  changedAt DateTime      @default(now())
 
-// Muchos registros de historial pertenecen a una solicitud
+  // Muchos registros de historial pertenecen a una solicitud
   requestId String
   request   Request @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
   // Muchos registros de historial pueden pertenecer al mismo usuario
   userId String
-  user   User @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
   @@map("requesthistory")
 }
