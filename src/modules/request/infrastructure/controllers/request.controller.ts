@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Request, UseGuards, Get, Patch, Param } from '@nestjs/common';
+import { Controller, Post, Body, Request, UseGuards, Get, Patch, Param, Delete } from '@nestjs/common';
 import { CreateRequestUseCase } from '../../application/use-cases/create-request.use-case';
 import { CreateRequestDto } from '../../application/dtos/create-request.dto';
 import { Public } from 'src/modules/auth/infrastructure/decorators/public.decorator';
@@ -9,6 +9,7 @@ import { Roles } from 'src/modules/auth/infrastructure/decorators/roles.decorato
 import { GetMyRequestsUseCase } from '../../application/use-cases/get-my-requests.use-case';
 import { UpdateRequestStatusDto } from '../../application/dtos/update-request-status.dto';
 import { UpdateRequestStatusUseCase } from '../../application/use-cases/update-request-status.use-case';
+import { DeleteRequestUseCase } from '../../application/use-cases/delete-request.use-case';
 
 @Controller('requests')
 export class RequestController {
@@ -17,6 +18,7 @@ export class RequestController {
     private readonly getAllRequestHistoryUseCase: GetAllRequestHistoryUseCase,
     private readonly getMyRequestsUseCase: GetMyRequestsUseCase,
     private readonly updateRequestStatusUseCase: UpdateRequestStatusUseCase,
+    private readonly deleteRequestUseCase: DeleteRequestUseCase,
   ) { }
 
   // @Public()
@@ -57,5 +59,13 @@ export class RequestController {
     @Request() req,
   ) {
     return this.updateRequestStatusUseCase.execute(id, dto.status, req.user.userId);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async delete(
+  @Param('id') id: string,
+  @Request() req,
+  ) {
+  return this.deleteRequestUseCase.execute(id, req.user.userId);
   }
 }

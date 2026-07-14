@@ -7,6 +7,7 @@ import { PrismaRequestHistoryRepository } from './infrastructure/repositories/pr
 import { GetAllRequestHistoryUseCase } from './application/use-cases/get-all-request-history.use-case';
 import { GetMyRequestsUseCase } from './application/use-cases/get-my-requests.use-case';
 import { UpdateRequestStatusUseCase } from './application/use-cases/update-request-status.use-case';
+import { DeleteRequestUseCase } from './application/use-cases/delete-request.use-case';
 
 @Module({
   controllers: [RequestController],
@@ -24,7 +25,8 @@ import { UpdateRequestStatusUseCase } from './application/use-cases/update-reque
     CreateRequestUseCase,
     GetAllRequestHistoryUseCase,
     GetMyRequestsUseCase,
-    UpdateRequestStatusUseCase
+    UpdateRequestStatusUseCase,
+    DeleteRequestUseCase,
 
   ],
   exports: ['IRequestRepository'],

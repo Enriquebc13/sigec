@@ -7,4 +7,5 @@ export interface IRequestRepository {
   findAll(): Promise<Request[]>;
   findByUserId(userId: string): Promise<Request[]>;
   updateStatus(id: string, status: RequestStatus): Promise<Request>;
+  delete(id: string): Promise<void>; // Elimina una solicitud por su ID
 }

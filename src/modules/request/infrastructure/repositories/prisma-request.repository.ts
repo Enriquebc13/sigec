@@ -43,4 +43,7 @@ export class PrismaRequestRepository implements IRequestRepository {
     });
     return updated as unknown as Request;
   }
+  async delete(id: string): Promise<void> {
+    await this.prisma.request.delete({ where: { id } });
+  }
 }
