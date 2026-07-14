@@ -3,6 +3,8 @@ import { PrismaService } from 'src/prisma.service';
 import { RequestController } from './infrastructure/controllers/request.controller';
 import { CreateRequestUseCase } from './application/use-cases/create-request.use-case';
 import { PrismaRequestRepository } from './infrastructure/repositories/prisma-request.repository';
+import { PrismaRequestHistoryRepository } from './infrastructure/repositories/prisma-request-history.repository';
+import { GetAllRequestHistoryUseCase } from './application/use-cases/get-all-request-history.use-case';
 
 @Module({
   controllers: [RequestController],
@@ -13,12 +15,14 @@ import { PrismaRequestRepository } from './infrastructure/repositories/prisma-re
       useClass: PrismaRequestRepository,
     },
     {
-      provide: CreateRequestUseCase,
-      useFactory: (requestRepo: PrismaRequestRepository) =>
-        new CreateRequestUseCase(requestRepo),
-      inject: ['IRequestRepository'],
+      provide: 'IRequestHistoryRepository',
+      useClass: PrismaRequestHistoryRepository,
     },
+
+    CreateRequestUseCase,
+    GetAllRequestHistoryUseCase
+
   ],
   exports: ['IRequestRepository'],
 })
-export class RequestModule {}
+export class RequestModule { }
