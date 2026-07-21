@@ -22,13 +22,10 @@ export class CreatePropertyUseCase {
       floor: dto.floor ?? null,
       type: dto.type,
       status: PropertyStatus.AVAILABLE,
-      address: dto.address,
-      city: dto.city,
-      state: dto.state,
-      zipCode: dto.zipCode,
       amenities: dto.amenities ?? null,
       userId: dto.userId,
       updatedAt: null,
+      address: dto.address,
     });
   }
 }
