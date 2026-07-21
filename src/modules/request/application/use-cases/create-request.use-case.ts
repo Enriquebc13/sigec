@@ -3,12 +3,11 @@ import { Request } from '../../domain/entities/request.entity';
 import { RequestResponseDto } from '../dtos/request-response.dto';
 import type { IRequestHistoryRepository } from '../../domain/interfaces/request-history.repository.interface';
 import { Inject, Injectable } from '@nestjs/common';
+import { RequestStatus } from 'generated/prisma/enums';
 
 export interface ICreateRequestInput {
-  nombre: string;
-  apellidos: string;
+
   telefono: string;
-  correo: string;
   propertyId: string;
 }
 @Injectable()
@@ -27,12 +26,10 @@ export class CreateRequestUseCase {
   ): Promise<RequestResponseDto> {
     const newRequest = new Request(
       crypto.randomUUID(),
-      input.nombre,
-      input.apellidos,
       input.telefono,
-      input.correo,
+      userId,
       input.propertyId,
-      'PENDING',
+      RequestStatus.PENDING,
       new Date(),
     );
 
@@ -48,10 +45,8 @@ export class CreateRequestUseCase {
 
     return {
       id: created.id,
-      nombre: created.nombre,
-      apellidos: created.apellidos,
       telefono: created.telefono,
-      correo: created.correo,
+      userId: created.userId,
       propertyId: created.propertyId,
       status: created.status,
       createdAt: created.createdAt,

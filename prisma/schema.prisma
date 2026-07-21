@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider     = "prisma-client"
   output       = "../generated/prisma"
@@ -26,22 +24,21 @@ model User {
   password  String
   role      Role
   active    Boolean   @default(true)
-  //Campos de timestap
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 
-  // Un usuario puede registrar muchas propiedades
-  properties Property[]
-  // Un usuario puede generar muchos registros en el historial
+  properties     Property[]
+  requests       Request[]
   requestHistory RequestHistory[]
+
   @@map("user")
 }
 
 enum PropertyStatus {
-  AVAILABLE // disponible
-  RESERVED // apartado
-  RENTED // rentado
-  UNAVAILABLE // no disponible temporalmente
+  AVAILABLE
+  RESERVED
+  RENTED
+  UNAVAILABLE
 }
 
 enum PropertyType {
@@ -60,54 +57,66 @@ model Property {
   floor           Int?
   type            PropertyType
   status          PropertyStatus @default(AVAILABLE)
-  address         String
-  city            String
-  state           String
-  zipCode         String
   amenities       String?
   createdAt       DateTime       @default(now())
   updatedAt       DateTime?      @updatedAt
 
-  // El administrador que registró el inmueble  
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  // Una propiedad puede tener muchas imágenes
-  //images Image[]
+  address Address?
+  images  Image[]
 
-  // Una propiedad puede tener muchas solicitudes
-  requests    Request[]
+  requests Request[]
+
   @@map("property")
 }
 
-// model Image {
-//   id  String @id @default(cuid())
-//   url String
+model Address {
+  id      String @id @default(cuid())
+  street  String
+  city    String
+  state   String
+  zipCode String
 
-//   // Una imagen pertenece a un inmueble
-//   propertyId String
-//   property   Property @relation(fields: [propertyId], references: [id])
-// }
+  propertyId String   @unique
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("address")
+}
+
+model Image {
+  id        String    @id @default(cuid())
+  url       String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("image")
+}
 
 enum RequestStatus {
   PENDING
   APPROVED
   REJECTED
-  WAITLIST
 }
 
 model Request {
-  id         String        @id @default(cuid())
-  nombre     String
-  apellidos  String
-  telefono   String
-  correo     String
+  id        String        @id @default(cuid())
+  telefono  String
+  status    RequestStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
   propertyId String
-  status     RequestStatus @default(PENDING)
-  createdAt  DateTime      @default(now())
+  property   Property @relation(fields: [propertyId], references: [id])
 
   history RequestHistory[]
-  property Property @relation(fields: [propertyId], references: [id])
+
   @@map("request")
 }
 
@@ -116,20 +125,18 @@ enum RequestAction {
   APPROVED
   REJECTED
   UPDATED
-  CANCELLED
 }
 
 model RequestHistory {
-  id        String         @id @default(cuid())
+  id        String        @id @default(cuid())
   action    RequestAction
-  changedAt DateTime       @default(now())
+  changedAt DateTime      @default(now())
 
-// Muchos registros de historial pertenecen a una solicitud
   requestId String
   request   Request @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
-  // Muchos registros de historial pueden pertenecer al mismo usuario
   userId String
   user   User @relation(fields: [userId], references: [id])
+
   @@map("requesthistory")
 }

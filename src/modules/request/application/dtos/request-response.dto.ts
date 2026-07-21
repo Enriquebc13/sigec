@@ -1,11 +1,9 @@
-import { RequestStatus } from '../../domain/entities/request.entity';
+import { RequestStatus } from 'generated/prisma/enums';
 
 export class RequestResponseDto {
   id: string;
-  nombre: string;
-  apellidos: string;
   telefono: string;
-  correo: string;
+  userId: string;
   propertyId: string;
   status: RequestStatus;
   createdAt: Date;

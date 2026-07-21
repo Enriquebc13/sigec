@@ -30,10 +30,19 @@ export class PrismaRequestHistoryRepository implements IRequestHistoryRepository
             },
             include: {
                 user: {
-                    select: { id: true, name: true, lastname: true, email: true },
+                    select: {name: true, lastname: true, email: true },
                 },
                 request: {
-                    select: { id: true, nombre: true, apellidos: true, status: true },
+                    select: {
+                        id: true,
+                        telefono: true,
+                        status: true,
+                        propertyId: true,
+                        userId: true,
+                        user: {
+                            select: { name: true, lastname: true, email: true },
+                        },
+                    },
                 },
             },
         });
