@@ -3,6 +3,9 @@
 /node_modules
 /build
 
+# MySQL data (docker compose)
+/db_data
+
 # Logs
 logs
 *.log
