@@ -1,15 +1,15 @@
 import { Controller, Post, Body, Get, Param, Patch, Delete, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { CreateUserUseCase } from '../../application/use-cases/create-user.use-case';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
-import { Public } from 'src/modules/auth/infrastructure/decorators/public.decorator';
 import { GetAllUsersUseCase } from '../../application/use-cases/get-all-users.use-case';
-import { Roles } from 'src/modules/auth/infrastructure/decorators/roles.decorator';
 import { GetUserByIdUseCase } from '../../application/use-cases/find-user-by-id.use-case';
 import { UpdateUserUseCase } from '../../application/use-cases/update-user.use-case';
 import { UpdateUserDto } from '../../application/dtos/update-user.dto';
 import { DeleteUserUseCase } from '../../application/use-cases/delete-user.use-case';
-import { JwtAuthGuard } from 'src/modules/auth/infrastructure/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/modules/auth/infrastructure/guards/roles.guard';
+import { Public } from '../../../auth/infrastructure/decorators/public.decorator';
+import { Roles } from '../../../auth/infrastructure/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../../auth/infrastructure/guards/jwt-auth.guard';
+import { RolesGuard } from '../../../auth/infrastructure/guards/roles.guard';
 
 @Controller('users')
 export class UserController {
@@ -22,7 +22,8 @@ export class UserController {
 
     ) { }
 
-    @Public()
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('ADMIN')
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Post()
     async create(@Body() createUserDto: CreateUserDto) {

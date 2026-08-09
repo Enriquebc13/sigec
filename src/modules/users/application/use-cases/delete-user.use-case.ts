@@ -17,7 +17,7 @@ export class DeleteUserUseCase {
 
         await this.userRepository.delete(id);
         return{
-            mesaage: 'Usuario eliminado correctamente'
+            message: 'Usuario eliminado correctamente'
         }
     }
 }
