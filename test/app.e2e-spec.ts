@@ -3,14 +3,25 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
+import { PrismaService } from 'src/prisma.service';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
 
+  const mockPrismaService = {
+    user: {
+      findUnique: jest.fn(),
+      findMany: jest.fn(),
+    },
+  };
+
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(PrismaService)
+      .useValue(mockPrismaService)
+      .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
