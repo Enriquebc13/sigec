@@ -11,10 +11,6 @@ export class CloudinaryService implements OnModuleInit {
     });
   }
 
-  /**
-   * Sube un archivo (buffer en memoria, viene de Multer) a Cloudinary
-   * y devuelve la URL pública (secure_url).
-   */
   async uploadFile(file: Express.Multer.File, folder = 'properties'): Promise<string> {
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
@@ -32,8 +28,6 @@ export class CloudinaryService implements OnModuleInit {
 
   /**
    * Elimina un archivo de Cloudinary a partir de su URL pública.
-   * Cloudinary necesita el "public_id" (carpeta/nombre sin extensión),
-   * así que lo extraemos de la URL.
    */
   async deleteFile(fileUrl: string): Promise<void> {
     const publicId = this.extractPublicId(fileUrl);
@@ -42,8 +36,6 @@ export class CloudinaryService implements OnModuleInit {
   }
 
   private extractPublicId(url: string): string | null {
-    // Ejemplo de URL:
-    // https://res.cloudinary.com/<cloud>/image/upload/v1234567890/properties/abc123.jpg
     const match = url.match(/\/upload\/(?:v\d+\/)?(.+)\.[a-zA-Z0-9]+$/);
     return match ? match[1] : null;
   }
