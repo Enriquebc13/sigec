@@ -15,8 +15,14 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
+
+    //CASO DE PRUEBA
+    //
     it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+      // expect significa: lo que se espera que haga
+
+      //toBe: deve ser lo siguiente ""
+      expect(appController.getHello()).toBe('¡Hola Mundo!');
     });
   });
 });
