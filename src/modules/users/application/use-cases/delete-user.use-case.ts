@@ -7,7 +7,11 @@ export class DeleteUserUseCase {
         @Inject('IUserRepository')
         private readonly userRepository: IUserRepository,
     ) {}
-
+    /**
+     * Elimina un usuario del sistema.
+     * @param id Identificador único del usuario.
+     * @returns El usuario eliminado.
+     */
     async execute(id: string) {
         const user = await this.userRepository.findById(id);
 

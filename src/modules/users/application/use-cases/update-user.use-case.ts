@@ -8,8 +8,13 @@ export class UpdateUserUseCase {
   constructor(
     @Inject('IUserRepository')
     private readonly userRepository: IUserRepository,
-  ) {}
-
+  ) { }
+  /**
+   * Actualiza los datos de un usuario existente.
+   * @param id Identificador del usuario.
+   * @param updateUserDto Datos que se desean actualizar.
+   * @returns El usuario actualizado.
+   */
   async execute(
     id: string,
     updateUserDto: UpdateUserDto,

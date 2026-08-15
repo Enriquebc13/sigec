@@ -20,7 +20,11 @@ export class CreateUserUseCase {
         @Inject('IUserRepository')
         private readonly userRepository: IUserRepository
     ) {}
-
+   /**
+    * Crea un nuevo usuario en el sistema.
+    * @param input Datos dl usuario que se desea registrar.
+    * @returns Información del usuario creado
+    */
     async execute(input: ICreateUserInput): Promise<UserResponseDto> {
 
         const hashedPassword = await bcrypt.hash(input.password, 10);
