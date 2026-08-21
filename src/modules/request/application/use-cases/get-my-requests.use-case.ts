@@ -9,6 +9,11 @@ export class GetMyRequestsUseCase {
     private readonly requestRepository: IRequestRepository,
   ) {}
 
+  /**
+   * Obtiene todas las solicitudes creadas por un usuario específico.
+   * @param userId - ID del usuario autenticado cuyas solicitudes se buscan.
+   * @returns {Promise<RequestResponseDto[]>} Listado de solicitudes del usuario.
+   */
   async execute(userId: string): Promise<RequestResponseDto[]> {
     return this.requestRepository.findByUserId(userId) as unknown as Promise<RequestResponseDto[]>;
   }

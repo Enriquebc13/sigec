@@ -10,6 +10,11 @@ import { GetMyRequestsUseCase } from '../../application/use-cases/get-my-request
 import { UpdateRequestStatusDto } from '../../application/dtos/update-request-status.dto';
 import { UpdateRequestStatusUseCase } from '../../application/use-cases/update-request-status.use-case';
 import { DeleteRequestUseCase } from '../../application/use-cases/delete-request.use-case';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { RequestEntity } from '../../domain/entities/request.entity';
+
+@ApiBearerAuth() //todo controlador requiere JWT
+@ApiTags("Solicitudes")
 
 @Controller('requests')
 export class RequestController {
@@ -20,6 +25,9 @@ export class RequestController {
     private readonly updateRequestStatusUseCase: UpdateRequestStatusUseCase,
     private readonly deleteRequestUseCase: DeleteRequestUseCase,
   ) { }
+
+@ApiOperation({ summary: "Registra nueva solicitud"})
+@ApiCreatedResponse({ type: RequestEntity}) // el tipo de retorno
 
   // @Public()
   // @Post()
@@ -38,18 +46,37 @@ export class RequestController {
       req.user.userId
     );
   }
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN')
-  @Get('history')
-  async getHistory() {
-    return this.getAllRequestHistoryUseCase.execute();
-  }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('my-requests')
-  async getMyRequests(@Request() req) {
-    return this.getMyRequestsUseCase.execute(req.user.userId);
-  }
+
+   //agregamso esto para el historial
+   @ApiOperation({summary: "Historial de solicitudes"})
+   @ApiOkResponse({ type: [RequestEntity], description: "Listado de todas las solicitudes" })
+   @UseGuards(JwtAuthGuard, RolesGuard)
+   @Roles('ADMIN')
+   @Get('history')
+   async getHistory() {
+     return this.getAllRequestHistoryUseCase.execute();
+   }
+
+
+    @ApiOperation({summary: "Obtener solicitud"})
+    @ApiOkResponse({ type: [RequestEntity], description: "Solicitudes del usuario autenticado" })
+    @UseGuards(JwtAuthGuard)
+    @Get('my-requests')
+    async getMyRequests(@Request() req) {
+      return this.getMyRequestsUseCase.execute(req.user.userId);
+    }
+
+
+
+//agregar lo mismo para actualizar
+  @ApiOperation({summary: "Actualiza una solicitud"})
+  @ApiParam({
+    type: "string",
+    name: "id",
+    description: "id de la solicitud"
+  })
+  @ApiOkResponse({ type: RequestEntity, description: "Solicitud actualizada correctamente" })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Patch(':id/status')
@@ -60,12 +87,17 @@ export class RequestController {
   ) {
     return this.updateRequestStatusUseCase.execute(id, dto.status, req.user.userId);
   }
+
+
+  //agregamso esto parael delete
+  @ApiOperation({summary: "Elimina una solicitud"})
+  @ApiOkResponse({ description: "Solicitud eliminada correctamente (sin contenido en la respuesta)" })
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async delete(
-  @Param('id') id: string,
-  @Request() req,
+    @Param('id') id: string,
+    @Request() req,
   ) {
-  return this.deleteRequestUseCase.execute(id, req.user.userId);
+    return this.deleteRequestUseCase.execute(id, req.user.userId);
   }
 }

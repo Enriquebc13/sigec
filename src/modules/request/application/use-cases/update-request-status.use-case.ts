@@ -13,6 +13,15 @@ export class UpdateRequestStatusUseCase {
     private readonly requestHistoryRepository: IRequestHistoryRepository,
   ) {}
 
+  /**
+   * Actualiza el estado de una solicitud existente (aprobada o rechazada)
+   * y registra el cambio en el historial de solicitudes.
+   * @param requestId - ID de la solicitud a actualizar.
+   * @param newStatus - Nuevo estado a asignar ('APPROVED' o 'REJECTED').
+   * @param userId - ID del usuario (ADMIN) que realiza el cambio.
+   * @throws {NotFoundException} Si la solicitud no existe.
+   * @returns {Promise<RequestResponseDto>} La solicitud con su estado actualizado.
+   */
   async execute(
     requestId: string,
     newStatus: 'APPROVED' | 'REJECTED',
