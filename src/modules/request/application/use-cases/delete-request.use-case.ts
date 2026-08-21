@@ -8,6 +8,14 @@ export class DeleteRequestUseCase {
     private readonly requestRepository: IRequestRepository,
   ) {}
 
+  /**
+   * Elimina una solicitud existente, validando que pertenezca al usuario autenticado.
+   * @param id - ID de la solicitud a eliminar.
+   * @param userId - ID del usuario que solicita la eliminación.
+   * @throws {NotFoundException} Si la solicitud no existe.
+   * @throws {ForbiddenException} Si el usuario no es dueño de la solicitud.
+   * @returns {Promise<void>} No retorna contenido si la operación es exitosa.
+   */
   async execute(id: string, userId: string): Promise<void> {
     // Buscar la solicitud por ID
     const request = await this.requestRepository.findById(id);

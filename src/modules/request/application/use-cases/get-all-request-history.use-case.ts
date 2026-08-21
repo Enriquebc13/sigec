@@ -9,6 +9,11 @@ export class GetAllRequestHistoryUseCase {
     private readonly repository: IRequestHistoryRepository,
   ) {}
 
+  /**
+   * Obtiene el historial completo de eventos registrados sobre todas las solicitudes.
+   * Pensado para uso administrativo (rol ADMIN).
+   * @returns {Promise<RequestHistoryResponseDto[]>} Listado de eventos del historial.
+   */
   async execute(): Promise<RequestHistoryResponseDto[]> {
     return this.repository.findAll() as unknown as Promise<RequestHistoryResponseDto[]>;
   }
