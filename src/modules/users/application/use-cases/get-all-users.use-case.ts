@@ -7,7 +7,10 @@ export class GetAllUsersUseCase {
 
     constructor(@Inject('IUserRepository')
     private readonly userRepository: IUserRepository) { }
-
+    /**
+     * Obtiene todos los usuarios registrados.
+     * @returns Lista de usuarios registrados.
+     */
     async execute(): Promise<UserDetailResponseDto[]> {
         const users = await this.userRepository.findAll();
         return users.map(({ id, name, lastname, email, role, active, createdAt, updatedAt }) => ({

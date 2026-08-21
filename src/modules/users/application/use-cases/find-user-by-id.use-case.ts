@@ -10,7 +10,11 @@ export class GetUserByIdUseCase {
     @Inject('IUserRepository')
     private readonly userRepository: IUserRepository,
   ) { }
-
+ /**
+  * Busca un usuario por su identificador.
+  * @param id Identificador único del usuario.
+  * @returns El usuario encontrado.
+  */
   async execute(id: string): Promise<UserDetailResponseDto> {
     const user = await this.userRepository.findById(id);
     if (!user) {
