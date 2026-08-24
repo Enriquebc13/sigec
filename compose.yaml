@@ -4,7 +4,7 @@ services:
       context: .
     environment:
       NODE_ENV: production
-      DATABASE_URL: mysql://sigec_user:${DB_PASSWORD}@db:3306/sigec_prod
+      DATABASE_URL: mysql://sigec_user:${DB_PASSWORD}@db:3306/sigec_prod?allowPublicKeyRetrieval=true&useSSL=false
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXP: 24h
     ports:
