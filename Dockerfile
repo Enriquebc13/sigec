@@ -9,15 +9,13 @@ WORKDIR /usr/src/app
 FROM base AS deps
 
 COPY package.json package-lock.json ./
-RUN --mount=type=cache,id=npm-cache,target=/root/.npm \
-    npm ci --omit=dev
+RUN npm ci --omit=dev
 
 ################################################################################
 FROM base AS build
 
 COPY package.json package-lock.json ./
-RUN --mount=type=cache,id=npm-cache,target=/root/.npm \
-    npm ci
+RUN npm ci
 
 COPY . .
 
