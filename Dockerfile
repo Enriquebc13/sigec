@@ -40,6 +40,7 @@ COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/dist ./dist
 COPY --from=build /usr/src/app/prisma ./prisma
 COPY --from=build /usr/src/app/prisma.config.ts ./prisma.config.ts
+COPY --from=build /usr/src/app/generated ./generated
 
 EXPOSE 3000
 
