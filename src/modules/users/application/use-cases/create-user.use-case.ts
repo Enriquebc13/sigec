@@ -10,7 +10,7 @@ export interface ICreateUserInput {
     name: string;
     lastname: string;
     password: string;
-    role: 'ADMIN' | 'CLIENT';
+    role?: 'ADMIN' | 'CLIENT';
 }
 @Injectable()
 
@@ -35,7 +35,7 @@ export class CreateUserUseCase {
             input.name,
             input.lastname,
             hashedPassword,
-            input.role,
+            input.role ?? 'CLIENT' ,
             true,
             new Date(),
             new Date(),
