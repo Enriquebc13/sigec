@@ -42,7 +42,9 @@ export class PrismaUserRepository implements IUserRepository {
     }
 
     async findAll(): Promise<User[]> {
-        const users = await this.prisma.user.findMany();
+         const users = await this.prisma.user.findMany({
+        orderBy: { createdAt: 'desc' }, // más reciente primero
+    });
         return users as User[];
     }
 
