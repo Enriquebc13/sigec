@@ -7,8 +7,11 @@ import { GetAllPropertiesUseCase } from './application/use-cases/get-all-propert
 import { GetPropertyUseCase } from './application/use-cases/get-property.use-case';
 import { UpdatePropertyUseCase } from './application/use-cases/update-property.use-case';
 import { DeletePropertyUseCase } from './application/use-cases/delete-property.use-case';
+import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
+import { CloudinaryModule } from 'src/shared/cloudinary/cloudinary.module';
 
 @Module({
+  imports: [CloudinaryModule],
   controllers: [PropertyController],
   providers: [
     PrismaService,
@@ -38,8 +41,8 @@ import { DeletePropertyUseCase } from './application/use-cases/delete-property.u
     },
     {
       provide: DeletePropertyUseCase,
-      useFactory: (propertyRepo: PrismaPropertyRepository) => new DeletePropertyUseCase(propertyRepo),
-      inject: ['IPropertyRepository'],
+      useFactory: (propertyRepo: PrismaPropertyRepository, cloudinaryService: CloudinaryService) => new DeletePropertyUseCase(propertyRepo, cloudinaryService),
+      inject: ['IPropertyRepository', CloudinaryService],
     },
   ],
 })
