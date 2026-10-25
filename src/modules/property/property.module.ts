@@ -45,5 +45,7 @@ import { CloudinaryModule } from 'src/shared/cloudinary/cloudinary.module';
       inject: ['IPropertyRepository', CloudinaryService],
     },
   ],
+  exports: ['IPropertyRepository'],
+
 })
 export class PropertyModule { }
