@@ -3,6 +3,11 @@ import { PrismaService } from '../../../../prisma.service';
 import type { CreatePropertyData, IPropertyRepository, UpdatePropertyData } from '../../domain/interfaces/property.repository.interface';
 import type { Property } from '../../domain/entities/property.entity';
 
+const propertyInclude = {
+  address: true,
+  images: { orderBy: { createdAt: 'asc' as const } },
+};
+
 @Injectable()
 export class PrismaPropertyRepository implements IPropertyRepository {
   constructor(private readonly prisma: PrismaService) { }
@@ -30,7 +35,7 @@ export class PrismaPropertyRepository implements IPropertyRepository {
           }
         }
       },
-      include: { address: true }
+      include: propertyInclude
     });
     return property as unknown as Property;
   }
@@ -38,13 +43,13 @@ export class PrismaPropertyRepository implements IPropertyRepository {
   async findAll(): Promise<Property[]> {
     const properties = await this.prisma.property.findMany(
       {
-        include: { address: true }
+        include: propertyInclude
       });
     return properties as unknown as Property[];
   }
 
   async findById(id: string): Promise<Property | null> {
-    const property = await this.prisma.property.findUnique({ where: { id }, include: { address: true } });
+    const property = await this.prisma.property.findUnique({ where: { id }, include: propertyInclude });
     return property ? property as unknown as Property : null;
   }
 
@@ -65,7 +70,7 @@ export class PrismaPropertyRepository implements IPropertyRepository {
           }
         } : undefined,
       },
-      include: { address: true }
+      include: propertyInclude
     });
     return property as unknown as Property;
   }
