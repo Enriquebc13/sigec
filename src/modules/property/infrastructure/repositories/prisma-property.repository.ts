@@ -40,13 +40,16 @@ export class PrismaPropertyRepository implements IPropertyRepository {
     return property as unknown as Property;
   }
 
-  async findAll(): Promise<Property[]> {
-    const properties = await this.prisma.property.findMany(
-      {
-        include: propertyInclude
-      });
-    return properties as unknown as Property[];
-  }
+async findAll(): Promise<Property[]> {
+  const properties = await this.prisma.property.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+    include: propertyInclude,
+  });
+
+  return properties as unknown as Property[];
+}
 
   async findById(id: string): Promise<Property | null> {
     const property = await this.prisma.property.findUnique({ where: { id }, include: propertyInclude });
