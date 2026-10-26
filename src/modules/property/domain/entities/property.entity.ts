@@ -1,6 +1,7 @@
 import { PropertyStatus, PropertyType } from "generated/prisma/enums";
 import { Address } from "./address.entity";
 import { ApiProperty } from "@nestjs/swagger";
+import { Image } from "src/modules/images/domain/entities/image.entity";
 
 
 export class Property {
@@ -46,6 +47,8 @@ export class Property {
   @ApiProperty({ required: false, type: () => Address, description: "Dirección de la propiedad" })
   public readonly address?: Address;
 
+  @ApiProperty({ required: false, type: () => [Image], description: "Imágenes de la propiedad" })
+  public readonly images?: Image[];
 
   constructor(
     id: string,
@@ -62,6 +65,7 @@ export class Property {
     createdAt: Date,
     updatedAt: Date | null,
     address?: Address,
+    images?: Image[],
   ) {
     this.id = id;
     this.title = title;
@@ -77,6 +81,7 @@ export class Property {
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.address = address;
+    this.images = images;
   }
 
 }

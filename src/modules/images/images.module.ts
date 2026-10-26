@@ -8,9 +8,11 @@ import { CreateImageUseCase } from './application/use-cases/create-image.use-cas
 import { GetImagesByPropertyUseCase } from './application/use-cases/get-images-by-property.use-case';
 import { GetImageUseCase } from './application/use-cases/get-image-by-id.use-case';
 import { DeleteImageUseCase } from './application/use-cases/delete-image.use-case';
+import type { IPropertyRepository } from '../property/domain/interfaces/property.repository.interface';
+import { PropertyModule } from '../property/property.module';
 
 @Module({
-  imports: [CloudinaryModule],
+  imports: [CloudinaryModule, PropertyModule],
   controllers: [ImagesController],
   providers: [
     PrismaService,
@@ -20,9 +22,9 @@ import { DeleteImageUseCase } from './application/use-cases/delete-image.use-cas
     },
     {
       provide: CreateImageUseCase,
-      useFactory: (imageRepo: PrismaImageRepository, cloudinaryService: CloudinaryService) =>
-        new CreateImageUseCase(imageRepo, cloudinaryService),
-      inject: ['IImageRepository', CloudinaryService],
+      useFactory: (imageRepo: PrismaImageRepository, propertyRepo: IPropertyRepository,cloudinaryService: CloudinaryService) =>
+        new CreateImageUseCase(imageRepo, propertyRepo, cloudinaryService),
+      inject: ['IImageRepository', 'IPropertyRepository', CloudinaryService],
     },
     {
       provide: GetImagesByPropertyUseCase,
