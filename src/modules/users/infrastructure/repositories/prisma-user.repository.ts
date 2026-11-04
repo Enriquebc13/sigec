@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma.service';
 import { IUserRepository } from '../../domain/interfaces/user.repository.interface';
 import { User } from '../../domain/entities/user.entity';
@@ -60,8 +60,16 @@ export class PrismaUserRepository implements IUserRepository {
     };
 }
 async delete(id: string): Promise<void> {
-  await this.prisma.user.delete({
-    where: { id },
-  });
+  try {
+    await this.prisma.user.delete({ where: { id } });
+  } catch (error: any) {
+    // P2003: el usuario tiene datos relacionados (solicitudes, propiedades...)
+    if (error?.code === 'P2003') {
+      throw new ConflictException(
+        'No se puede eliminar este usuario porque tiene solicitudes o propiedades asociadas.',
+      );
+    }
+    throw error;
+  }
 }
 }
