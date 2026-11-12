@@ -8,20 +8,33 @@ export class PrismaUserRepository implements IUserRepository {
     constructor(private readonly prisma: PrismaService) { }
 
     async create(user: User): Promise<User> {
-        const createdUser = await this.prisma.user.create({
-            data: {
-                id: user.id,
-                email: user.email,
-                name: user.name,
-                lastname: user.lastname,
-                password: user.password,
-                role: user.role,
-                active: user.active,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt,
-            },
-        });
-        return createdUser as User;
+        try {
+            const createdUser = await this.prisma.user.create({
+                data: {
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                    lastname: user.lastname,
+                    password: user.password,
+                    role: user.role,
+                    active: user.active,
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt,
+                },
+            });
+
+            return createdUser as User;
+
+        } catch (error: any) {
+            // P2002: el correo electrónico ya está registrado
+            if (error?.code === 'P2002') {
+                throw new ConflictException(
+                    'El correo electrónico ya está registrado.',
+                );
+            }
+
+            throw error;
+        }
     }
 
     async findByEmail(email: string): Promise<User | null> {
@@ -42,34 +55,34 @@ export class PrismaUserRepository implements IUserRepository {
     }
 
     async findAll(): Promise<User[]> {
-         const users = await this.prisma.user.findMany({
-        orderBy: { createdAt: 'desc' }, // más reciente primero
-    });
+        const users = await this.prisma.user.findMany({
+            orderBy: { createdAt: 'desc' }, // más reciente primero
+        });
         return users as User[];
     }
 
-  async update(id: string, data: Partial<User>): Promise<User> {
-    const updatedUser = await this.prisma.user.update({
-        where: { id },
-        data,
-    });
+    async update(id: string, data: Partial<User>): Promise<User> {
+        const updatedUser = await this.prisma.user.update({
+            where: { id },
+            data,
+        });
 
-    return {
-        ...updatedUser,
-        updatedAt: updatedUser.updatedAt ?? new Date(),
-    };
-}
-async delete(id: string): Promise<void> {
-  try {
-    await this.prisma.user.delete({ where: { id } });
-  } catch (error: any) {
-    // P2003: el usuario tiene datos relacionados (solicitudes, propiedades...)
-    if (error?.code === 'P2003') {
-      throw new ConflictException(
-        'No se puede eliminar este usuario porque tiene solicitudes o propiedades asociadas.',
-      );
+        return {
+            ...updatedUser,
+            updatedAt: updatedUser.updatedAt ?? new Date(),
+        };
     }
-    throw error;
-  }
-}
+    async delete(id: string): Promise<void> {
+        try {
+            await this.prisma.user.delete({ where: { id } });
+        } catch (error: any) {
+            // P2003: el usuario tiene datos relacionados (solicitudes, propiedades...)
+            if (error?.code === 'P2003') {
+                throw new ConflictException(
+                    'No se puede eliminar este usuario porque tiene solicitudes o propiedades asociadas.',
+                );
+            }
+            throw error;
+        }
+    }
 }

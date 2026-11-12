@@ -5,19 +5,21 @@ import { LoginUseCase } from "src/modules/auth/application/use-cases/login.use-c
 
 @Controller('auth')
 export class AuthController {
-    constructor(private LoginUseCase: LoginUseCase){}
+    constructor(private LoginUseCase: LoginUseCase) { }
 
     @Public()
     @UseGuards(LocalAuthGuard)
     @HttpCode(HttpStatus.OK)
     @Post('login')
     singIn(@Request() req) {
+        console.log('Usuario que inició sesión:', req.user);
+        console.log(`Inicio de sesión: ${req.user.email}`);
         return this.LoginUseCase.login(req.user);
     }
     @Public()
     @UseGuards(LocalAuthGuard)
     @Post('auth/logout')
-    async logout(@Request()req){
+    async logout(@Request() req) {
         return req.logout();
     }
 }

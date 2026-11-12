@@ -40,7 +40,7 @@ export class RequestController {
     @Body() dto: CreateRequestDto,
     @Request() req
   ) {
-    console.log(req.user);
+    console.log(`Nueva solcitud creada por:`, req.user);
     return this.createRequestUseCase.execute(
       dto,
       req.user.userId

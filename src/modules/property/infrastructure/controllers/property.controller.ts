@@ -11,6 +11,7 @@ import { RolesGuard } from 'src/modules/auth/infrastructure/guards/roles.guard';
 import { Roles } from 'src/modules/auth/infrastructure/decorators/roles.decorator';
 import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Property } from '../../domain/entities/property.entity';
+import { Public } from 'src/modules/auth/infrastructure/decorators/public.decorator';
 
 @ApiBearerAuth() //Todo el controlador requiere jwt
 @ApiTags("Propiedades")//Nombre del grupo de endpoints
@@ -40,10 +41,9 @@ export class PropertyController {
     return this.createPropertyUseCase.execute(dto);
   }
 
-
+  @Public()
   @ApiOperation({ summary: "Obtener todas las propiedades" })
   @ApiResponse({ status: 200, type: Property, isArray: true })
-  @UseGuards(JwtAuthGuard)
   @Get()
   @HttpCode(HttpStatus.OK)
   findAll() {

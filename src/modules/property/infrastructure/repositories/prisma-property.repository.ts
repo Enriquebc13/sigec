@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma.service';
 import type { CreatePropertyData, IPropertyRepository, UpdatePropertyData } from '../../domain/interfaces/property.repository.interface';
 import type { Property } from '../../domain/entities/property.entity';
@@ -79,6 +79,18 @@ async findAll(): Promise<Property[]> {
   }
 
   async delete(id: string): Promise<void> {
-    await this.prisma.property.delete({ where: { id } });
+  try {
+    await this.prisma.property.delete({
+      where: { id },
+    });
+  } catch (error: any) {
+    if (error?.code === 'P2003') {
+      throw new ConflictException(
+        'No se puede eliminar esta propiedad porque tiene solicitudes asociadas.',
+      );
+    }
+
+    throw error;
   }
+}
 }
