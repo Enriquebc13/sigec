@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Request, UseGuards, Get, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Request, UseGuards, Get, Patch, Param, Delete, Query } from '@nestjs/common';
 import { CreateRequestUseCase } from '../../application/use-cases/create-request.use-case';
 import { CreateRequestDto } from '../../application/dtos/create-request.dto';
 import { Public } from 'src/modules/auth/infrastructure/decorators/public.decorator';
@@ -12,6 +12,12 @@ import { UpdateRequestStatusUseCase } from '../../application/use-cases/update-r
 import { DeleteRequestUseCase } from '../../application/use-cases/delete-request.use-case';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { RequestEntity } from '../../domain/entities/request.entity';
+import { GetAllRequestsUseCase } from '../../application/use-cases/get-all-requests.use-case';
+import { ListRequestsQueryDto } from '../../application/dtos/list-requests-query.dto';
+import { AdminRequestResponseDto } from '../../application/dtos/request-response.dto';
+import { CancelRequestUseCase } from '../../application/use-cases/cancel-request.use-case';
+import { UpdateRequestPhoneUseCase } from '../../application/use-cases/update-request-phone.use-case';
+import { UpdateRequestPhoneDto } from '../../application/dtos/update-request-phone.dto';
 
 @ApiBearerAuth() //todo controlador requiere JWT
 @ApiTags("Solicitudes")
@@ -24,6 +30,9 @@ export class RequestController {
     private readonly getMyRequestsUseCase: GetMyRequestsUseCase,
     private readonly updateRequestStatusUseCase: UpdateRequestStatusUseCase,
     private readonly deleteRequestUseCase: DeleteRequestUseCase,
+    private readonly getAllRequestsUseCase: GetAllRequestsUseCase,
+    private readonly cancelRequestUseCase: CancelRequestUseCase,
+    private readonly updateRequestPhoneUseCase: UpdateRequestPhoneUseCase,
   ) { }
 
 @ApiOperation({ summary: "Registra nueva solicitud"})
@@ -47,6 +56,17 @@ export class RequestController {
     );
   }
 
+
+  // Panel admin: todas las solicitudes, o las de una propiedad con ?propertyId=
+  // (ej. GET /requests?propertyId=abc&status=PENDING desde el detalle del inmueble)
+  @ApiOperation({ summary: "Listado de solicitudes (ADMIN), filtrable por propertyId y status" })
+  @ApiOkResponse({ type: [AdminRequestResponseDto], description: "Solicitudes con solicitante, propiedad y posicionListaEspera" })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @Get()
+  async findAll(@Query() query: ListRequestsQueryDto) {
+    return this.getAllRequestsUseCase.execute(query);
+  }
 
    //agregamso esto para el historial
    @ApiOperation({summary: "Historial de solicitudes"})
@@ -88,6 +108,30 @@ export class RequestController {
     return this.updateRequestStatusUseCase.execute(id, dto.status, req.user.userId);
   }
 
+
+  // El solicitante cancela su solicitud PENDING (sale de la lista de espera)
+  @ApiOperation({ summary: "Cancela una solicitud pendiente (solo su dueño)" })
+  @ApiParam({ type: "string", name: "id", description: "id de la solicitud" })
+  @ApiOkResponse({ description: "Solicitud cancelada; queda REJECTED con cancelledByApplicant: true" })
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/cancel')
+  async cancel(@Param('id') id: string, @Request() req) {
+    return this.cancelRequestUseCase.execute(id, req.user.userId);
+  }
+
+  // El solicitante corrige su teléfono (PENDING o APPROVED)
+  @ApiOperation({ summary: "Edita el teléfono de una solicitud (solo su dueño)" })
+  @ApiParam({ type: "string", name: "id", description: "id de la solicitud" })
+  @ApiOkResponse({ description: "Solicitud con el teléfono actualizado" })
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/phone')
+  async updatePhone(
+    @Param('id') id: string,
+    @Body() dto: UpdateRequestPhoneDto,
+    @Request() req,
+  ) {
+    return this.updateRequestPhoneUseCase.execute(id, dto.telefono, req.user.userId);
+  }
 
   //agregamso esto parael delete
   @ApiOperation({summary: "Elimina una solicitud"})

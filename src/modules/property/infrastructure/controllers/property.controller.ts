@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
 import { CreatePropertyUseCase } from '../../application/use-cases/create-property.use-case';
 import { CreatePropertyDto } from '../../application/dtos/create-property.dto';
 import { JwtAuthGuard } from '../../../auth/infrastructure/guards/jwt-auth.guard';
@@ -79,8 +79,8 @@ export class PropertyController {
   @Roles('ADMIN')
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  update(@Param('id') id: string, @Body() dto: UpdatePropertyDto) {
-    return this.updatePropertyUseCase.execute(id, dto);
+  update(@Param('id') id: string, @Body() dto: UpdatePropertyDto, @Request() req) {
+    return this.updatePropertyUseCase.execute(id, dto, req.user.userId);
   }
 
   @ApiOperation({ summary: "Eliminar una Propiedad" })
