@@ -4,6 +4,7 @@ import { RequestResponseDto } from '../dtos/request-response.dto';
 import type { IRequestHistoryRepository } from '../../domain/interfaces/request-history.repository.interface';
 import { Inject, Injectable } from '@nestjs/common';
 import { RequestStatus } from 'generated/prisma/enums';
+import { resolveWaitlistPosition } from '../helpers/waitlist-position';
 
 export interface ICreateRequestInput {
   telefono: string;
@@ -56,6 +57,8 @@ export class CreateRequestUseCase {
       propertyId: created.propertyId,
       status: created.status,
       createdAt: created.createdAt,
+      // Puesto en la fila de esa propiedad al momento de crear la solicitud
+      posicionListaEspera: await resolveWaitlistPosition(this.requestRepository, created),
     };
   }
 }

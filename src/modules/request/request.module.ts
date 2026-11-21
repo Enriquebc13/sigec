@@ -8,6 +8,9 @@ import { GetAllRequestHistoryUseCase } from './application/use-cases/get-all-req
 import { GetMyRequestsUseCase } from './application/use-cases/get-my-requests.use-case';
 import { UpdateRequestStatusUseCase } from './application/use-cases/update-request-status.use-case';
 import { DeleteRequestUseCase } from './application/use-cases/delete-request.use-case';
+import { GetAllRequestsUseCase } from './application/use-cases/get-all-requests.use-case';
+import { CancelRequestUseCase } from './application/use-cases/cancel-request.use-case';
+import { UpdateRequestPhoneUseCase } from './application/use-cases/update-request-phone.use-case';
 
 @Module({
   controllers: [RequestController],
@@ -27,6 +30,9 @@ import { DeleteRequestUseCase } from './application/use-cases/delete-request.use
     GetMyRequestsUseCase,
     UpdateRequestStatusUseCase,
     DeleteRequestUseCase,
+    GetAllRequestsUseCase,
+    CancelRequestUseCase,
+    UpdateRequestPhoneUseCase,
 
   ],
   exports: ['IRequestRepository'],

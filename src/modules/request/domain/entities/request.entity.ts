@@ -34,6 +34,12 @@ export class RequestEntity {
   })
   public readonly createdAt: Date;
 
+  @ApiProperty({
+    required: false,
+    description: 'true si el propio solicitante canceló la solicitud',
+  })
+  public readonly cancelledByApplicant?: boolean;
+
   constructor(
     id: string,
     telefono: string,
